@@ -22,7 +22,7 @@ Permite registrar, consultar, filtrar, actualizar y eliminar la asistencia diari
 | C# / .NET 8 SDK | Lenguaje y plataforma de desarrollo |
 | ASP.NET Core Minimal APIs | Definición de los endpoints HTTP |
 | Visual Studio 2022 | IDE de desarrollo |
-| Archivo `.http` (Visual Studio / VS Code REST Client) | Pruebas de los endpoints |
+| Visual Studio Code + Thunder Client | Pruebas de los endpoints |
 | Git y GitHub | Control de versiones y alojamiento del código |
 
 ## Estructura del proyecto
@@ -37,7 +37,6 @@ AsistenciaApi/
 │   └── RegistroAsistencia.cs              # Modelo del registro de asistencia
 ├── Properties/
 │   └── launchSettings.json                # Perfiles y puertos de ejecución
-├── AsistenciaApi.http                     # Peticiones de prueba
 ├── Program.cs                             # Configuración, endpoints y validaciones
 ├── AsistenciaApi.csproj
 └── AsistenciaApi.sln
@@ -76,7 +75,8 @@ Respuestas de error: `400 Bad Request` cuando falla una validación y `404 Not F
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) o superior
 - Git
-- (Opcional) Visual Studio 2022, o VS Code con la extensión REST Client
+- Visual Studio Code con la extensión [Thunder Client](https://marketplace.visualstudio.com/items?itemName=rangav.vscode-thunder-client) (para las pruebas)
+- (Opcional) Visual Studio 2022
 
 ## Descarga y ejecución
 
@@ -106,34 +106,39 @@ Respuestas de error: `400 Bad Request` cuando falla una validación y `404 Not F
 
 ## Pruebas
 
-### Con el archivo `.http`
+Las pruebas de la API se realizan con la extensión **Thunder Client** de Visual Studio Code.
 
-Abrir `AsistenciaApi.http` en Visual Studio (o en VS Code con REST Client) con la API en ejecución, y pulsar **Send Request** sobre cada petición. El archivo incluye ejemplos de todas las operaciones en orden: crear, consultar, filtrar, actualizar y eliminar.
+1. Instalar la extensión **Thunder Client** desde el Marketplace de VS Code.
+2. Ejecutar la API (`dotnet run --launch-profile http`).
+3. Abrir Thunder Client desde la barra lateral de VS Code y pulsar **New Request**.
+4. Seleccionar el método HTTP, escribir la URL y, para POST, PUT y PATCH, ir a la pestaña **Body → JSON** y pegar el cuerpo de la petición.
+5. Pulsar **Send** y revisar el código de estado y la respuesta.
 
-### Con curl
+### Peticiones de ejemplo
 
-```bash
-# Crear un registro
-curl -X POST http://localhost:5115/api/asistencias \
-  -H "Content-Type: application/json" \
-  -d '{"codigoEmpleado":"EMP001","nombreEmpleado":"Ana Perez","departamento":"Contabilidad","fecha":"2026-10-09","horaEntrada":"08:00:00","horaSalida":"17:00:00","estado":"Presente"}'
+| # | Método | URL | Body (JSON) | Respuesta esperada |
+|---|---|---|---|---|
+| 1 | POST | `http://localhost:5115/api/asistencias` | Ver ejemplo abajo | `201 Created` |
+| 2 | GET | `http://localhost:5115/api/asistencias` | — | `200 OK` |
+| 3 | GET | `http://localhost:5115/api/asistencias/1` | — | `200 OK` |
+| 4 | GET | `http://localhost:5115/api/asistencias?codigoEmpleado=EMP001&estado=Presente` | — | `200 OK` |
+| 5 | PUT | `http://localhost:5115/api/asistencias/1` | Registro completo | `200 OK` |
+| 6 | PATCH | `http://localhost:5115/api/asistencias/1` | `{ "estado": "Tardanza" }` | `200 OK` |
+| 7 | DELETE | `http://localhost:5115/api/asistencias/1` | — | `200 OK` |
 
-# Listar todos
-curl http://localhost:5115/api/asistencias
+Body de ejemplo para POST y PUT:
 
-# Filtrar por empleado y estado
-curl "http://localhost:5115/api/asistencias?codigoEmpleado=EMP001&estado=Presente"
-
-# Obtener por id
-curl http://localhost:5115/api/asistencias/1
-
-# Actualización parcial
-curl -X PATCH http://localhost:5115/api/asistencias/1 \
-  -H "Content-Type: application/json" \
-  -d '{"estado":"Tardanza"}'
-
-# Eliminar
-curl -X DELETE http://localhost:5115/api/asistencias/1
+```json
+{
+  "codigoEmpleado": "EMP001",
+  "nombreEmpleado": "Ana Perez",
+  "departamento": "Contabilidad",
+  "fecha": "2026-10-09",
+  "horaEntrada": "08:00:00",
+  "horaSalida": "17:00:00",
+  "estado": "Presente",
+  "observacion": "Llego a tiempo"
+}
 ```
 
 ### Casos de validación sugeridos
