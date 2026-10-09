@@ -1,0 +1,54 @@
+@AsistenciaApi_HostAddress = http://localhost:5115
+
+### Listar todos los registros
+GET {{AsistenciaApi_HostAddress}}/api/asistencias
+Accept: application/json
+
+### Crear un registro
+POST {{AsistenciaApi_HostAddress}}/api/asistencias
+Content-Type: application/json
+
+{
+  "codigoEmpleado": "EMP001",
+  "nombreEmpleado": "Ana Perez",
+  "departamento": "Contabilidad",
+  "fecha": "2026-10-09",
+  "horaEntrada": "08:00:00",
+  "horaSalida": "17:00:00",
+  "estado": "Presente",
+  "observacion": "Llego a tiempo"
+}
+
+### Obtener un registro por id
+GET {{AsistenciaApi_HostAddress}}/api/asistencias/1
+Accept: application/json
+
+### Filtrar por codigo de empleado y estado
+GET {{AsistenciaApi_HostAddress}}/api/asistencias?codigoEmpleado=EMP001&estado=Presente
+Accept: application/json
+
+### Actualizar un registro completo
+PUT {{AsistenciaApi_HostAddress}}/api/asistencias/1
+Content-Type: application/json
+
+{
+  "codigoEmpleado": "EMP001",
+  "nombreEmpleado": "Ana Perez",
+  "departamento": "Contabilidad",
+  "fecha": "2026-10-09",
+  "horaEntrada": "08:20:00",
+  "horaSalida": "17:00:00",
+  "estado": "Tardanza",
+  "observacion": "Trafico"
+}
+
+### Actualizar parcialmente un registro
+PATCH {{AsistenciaApi_HostAddress}}/api/asistencias/1
+Content-Type: application/json
+
+{
+  "estado": "Justificado"
+}
+
+### Eliminar un registro
+DELETE {{AsistenciaApi_HostAddress}}/api/asistencias/1
