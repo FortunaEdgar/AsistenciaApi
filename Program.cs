@@ -108,7 +108,7 @@ grupo.MapPatch("/{id:int}", (int id, ActualizarParcialAsistenciaDto dto) =>
     registro.HoraEntrada = entrada;
     registro.HoraSalida = salida;
     registro.Estado = estado;
-    registro.Observacion = dto.Observacin ?? registro.Observacion;
+    registro.Observacion = dto.Observacion ?? registro.Observacion;
 
     return Results.Ok(registro);
 });

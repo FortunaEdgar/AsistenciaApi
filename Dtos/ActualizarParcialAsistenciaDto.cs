@@ -9,6 +9,6 @@
         public TimeOnly? HoraEntrada { get; set; }
         public TimeOnly? HoraSalida { get; set; }
         public string? Estado { get; set; }
-        public string? Observacin {  get; set; }
+        public string? Observacion { get; set; }
     }
 }
